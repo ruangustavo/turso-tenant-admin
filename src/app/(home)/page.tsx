@@ -1,4 +1,4 @@
-import { SettingsIcon } from "lucide-react";
+import { Building2, SettingsIcon } from "lucide-react";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -49,20 +49,39 @@ export default async function Home() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {tenants.map((tenant) => (
-              <TableRow key={tenant.id}>
-                <TableCell className="font-medium">{tenant.name}</TableCell>
-                <TableCell>
-                  {tenant.users.map((user) => user.username).join(", ")}
-                </TableCell>
-                <TableCell>
-                  <AlertDialogDeleteTenant
-                    tenantId={tenant.id}
-                    tenantName={tenant.name}
-                  />
+            {tenants.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={3}
+                  className="text-center py-8 text-muted-foreground"
+                >
+                  <div className="flex flex-col items-center gap-4">
+                    <Building2 className="w-16 h-16 text-muted-foreground/50" />
+                    <div className="flex flex-col items-center gap-2">
+                      <p className="text-lg font-medium">No tenants found</p>
+                      <p className="text-sm">
+                        Create your first tenant to get started
+                      </p>
+                    </div>
+                  </div>
                 </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              tenants.map((tenant) => (
+                <TableRow key={tenant.id}>
+                  <TableCell className="font-medium">{tenant.name}</TableCell>
+                  <TableCell>
+                    {tenant.users.map((user) => user.username).join(", ")}
+                  </TableCell>
+                  <TableCell>
+                    <AlertDialogDeleteTenant
+                      tenantId={tenant.id}
+                      tenantName={tenant.name}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </div>
