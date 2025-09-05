@@ -2,7 +2,7 @@
 
 import { hash } from "bcrypt";
 import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { z } from "zod/v4";
 import { createTenantSchema } from "@/app/(home)/utils/schema";
 import { db } from "@/db";
@@ -64,7 +64,7 @@ export const createTenant = actionClient
       return { error: "Failed to create users" };
     }
 
-    revalidatePath("/");
+    revalidateTag("tenant");
     return { success: "Tenant created successfully" };
   });
 
@@ -94,6 +94,6 @@ export const deleteTenant = actionClient
       return { error: "Failed to delete database" };
     }
 
-    revalidatePath("/");
+    revalidateTag("tenant");
     return { success: "Tenant and database deleted successfully" };
   });

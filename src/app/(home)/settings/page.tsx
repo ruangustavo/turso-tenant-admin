@@ -1,13 +1,27 @@
 import { ArrowLeft } from "lucide-react";
+import { unstable_cache as cache } from "next/cache";
 import Link from "next/link";
-import { getSettings } from "@/actions/settings";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { db } from "@/db";
+import { settings as settingsTable } from "@/db/schema";
 import { SettingsForm } from "./components/settings-form";
 
+const getSettings = cache(
+  async () => {
+    const settings = await db.select().from(settingsTable).get();
+    if (!settings) return { error: "Settings not found" };
+    return { ddl: settings.ddl };
+  },
+  [],
+  {
+    tags: ["settings"],
+  },
+);
+
 export default async function SettingsPage() {
-  const settingsResult = await getSettings();
-  const currentDdl = settingsResult.data?.ddl || "";
+  const { ddl } = await getSettings();
+  const currentDdl = ddl || "";
 
   return (
     <div className="py-6">

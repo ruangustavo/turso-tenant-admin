@@ -1,16 +1,11 @@
 "use server";
 
 import { eq } from "drizzle-orm";
+import { revalidateTag } from "next/cache";
 import z from "zod";
 import { db } from "@/db";
 import { settings as settingsTable } from "@/db/schema";
 import { actionClient } from "@/lib/actions";
-
-export const getSettings = actionClient.action(async () => {
-  const settings = await db.select().from(settingsTable).get();
-  if (!settings) return { error: "Settings not found" };
-  return { ddl: settings.ddl };
-});
 
 export const updateSettings = actionClient
   .inputSchema(
@@ -25,12 +20,12 @@ export const updateSettings = actionClient
       .get();
 
     if (!settings) {
-      const inserted = await db
+      const createdSettings = await db
         .insert(settingsTable)
         .values({ ddl })
         .returning({ id: settingsTable.id })
         .get();
-      settings = inserted;
+      settings = createdSettings;
     }
 
     await db
@@ -38,5 +33,7 @@ export const updateSettings = actionClient
       .set({ ddl })
       .where(eq(settingsTable.id, settings.id))
       .run();
+
+    revalidateTag("settings");
     return { success: "Settings updated successfully" };
   });

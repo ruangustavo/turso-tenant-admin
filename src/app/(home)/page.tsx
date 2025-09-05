@@ -1,4 +1,5 @@
 import { Building2, SettingsIcon } from "lucide-react";
+import { unstable_cache as cache } from "next/cache";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -13,16 +14,26 @@ import { db } from "@/db";
 import { AlertDialogDeleteTenant } from "./components/alert-dialog-delete-tenant";
 import { SheetCreateTenant } from "./components/sheet-create-tenant";
 
-export default async function Home() {
-  const tenants = await db.query.tenants.findMany({
-    with: {
-      users: {
-        columns: {
-          username: true,
+const getTenants = cache(
+  async () => {
+    return await db.query.tenants.findMany({
+      with: {
+        users: {
+          columns: {
+            username: true,
+          },
         },
       },
-    },
-  });
+    });
+  },
+  [],
+  {
+    tags: ["tenants"],
+  },
+);
+
+export default async function Home() {
+  const tenants = await getTenants();
 
   return (
     <div>
