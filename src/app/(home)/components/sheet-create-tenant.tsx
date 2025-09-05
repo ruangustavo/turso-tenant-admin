@@ -26,6 +26,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { createTenantSchema } from "../utils/schema";
 
 type CreateTenantForm = z.infer<typeof createTenantSchema>;
@@ -183,9 +184,9 @@ export function SheetCreateTenant({ onTenantCreated }: SheetCreateTenantProps) {
             </div>
 
             <SheetFooter className="p-0">
-              <Button type="submit" disabled={isExecuting}>
+              <SubmitButton isSubmitting={isExecuting}>
                 Create tenant
-              </Button>
+              </SubmitButton>
             </SheetFooter>
           </form>
         </Form>

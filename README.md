@@ -22,11 +22,15 @@
     </tr>
     <tr>
       <td>Better error handling and feedback (which stage the tenant creation is in? Which step is failing?)</td>
-      <td>⏳</td>
+      <td>❌</td>
     </tr>
     <tr>
       <td>Data consistency between the database and the tenant table</td>
-      <td>⏳</td>
+      <td>❌</td>
+    </tr>
+    <tr>
+      <td>Run migrations in all databases</td>
+      <td>❌</td>
     </tr>
   </tbody>
 </table>

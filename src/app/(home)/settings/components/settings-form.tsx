@@ -5,7 +5,7 @@ import { useAction } from "next-safe-action/hooks";
 import { useId, useState } from "react";
 import { toast } from "sonner";
 import { updateSettings } from "@/actions/settings";
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { Textarea } from "@/components/ui/textarea";
 
 interface SettingsFormProps {
@@ -55,9 +55,7 @@ export function SettingsForm({ initialDdl }: SettingsFormProps) {
       </div>
 
       <div className="flex justify-end">
-        <Button type="submit" disabled={isExecuting}>
-          Save settings
-        </Button>
+        <SubmitButton isSubmitting={isExecuting}>Save settings</SubmitButton>
       </div>
     </form>
   );
