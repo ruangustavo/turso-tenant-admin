@@ -1,4 +1,7 @@
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 import { getSettings } from "@/actions/settings";
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SettingsForm } from "./components/settings-form";
 
@@ -8,6 +11,14 @@ export default async function SettingsPage() {
 
   return (
     <div className="py-6">
+      <div className="mb-6">
+        <Link href="/">
+          <Button variant="ghost" size="sm" className="gap-2">
+            <ArrowLeft className="h-4 w-4" />
+            Voltar
+          </Button>
+        </Link>
+      </div>
       <Tabs
         defaultValue="general"
         orientation="vertical"
