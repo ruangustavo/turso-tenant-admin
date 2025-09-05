@@ -56,7 +56,7 @@ export default async function Home() {
             <TableRow>
               <TableHead>Tenant</TableHead>
               <TableHead>User</TableHead>
-              <TableHead>Ações</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
