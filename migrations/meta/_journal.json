@@ -15,6 +15,20 @@
       "when": 1757082193928,
       "tag": "0001_dusty_baron_strucker",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1757089353322,
+      "tag": "0002_perfect_doctor_doom",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1757090466812,
+      "tag": "0003_brown_adam_warlock",
+      "breakpoints": true
     }
   ]
 }

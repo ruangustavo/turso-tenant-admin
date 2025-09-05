@@ -9,14 +9,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { db } from "@/db";
+import { AlertDialogDeleteTenant } from "./components/alert-dialog-delete-tenant";
 import { SheetCreateTenant } from "./components/sheet-create-tenant";
 
-export default function Home() {
-  const tenantsData = [
-    { id: 1, name: "Empresa ABC", user: "João Silva" },
-    { id: 2, name: "Corporação XYZ", user: "Maria Santos" },
-    { id: 3, name: "Tech Solutions", user: "Pedro Oliveira" },
-  ];
+export default async function Home() {
+  const tenants = await db.query.tenants.findMany({
+    with: {
+      users: {
+        columns: {
+          username: true,
+        },
+      },
+    },
+  });
 
   return (
     <div>
@@ -39,13 +45,22 @@ export default function Home() {
             <TableRow>
               <TableHead>Tenant</TableHead>
               <TableHead>User</TableHead>
+              <TableHead>Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {tenantsData.map((tenant) => (
+            {tenants.map((tenant) => (
               <TableRow key={tenant.id}>
                 <TableCell className="font-medium">{tenant.name}</TableCell>
-                <TableCell>{tenant.user}</TableCell>
+                <TableCell>
+                  {tenant.users.map((user) => user.username).join(", ")}
+                </TableCell>
+                <TableCell>
+                  <AlertDialogDeleteTenant
+                    tenantId={tenant.id}
+                    tenantName={tenant.name}
+                  />
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -22,6 +22,16 @@ export const checkDatabaseExists = async (tenant: string) => {
   }
 };
 
+export const deleteDatabase = async (tenant: string) => {
+  try {
+    await turso.databases.delete(tenant);
+    return true;
+  } catch (error) {
+    console.error("Failed to delete database:", error);
+    return false;
+  }
+};
+
 export const createDatabase = async (tenant: string) => {
   try {
     await turso.databases.create(tenant, {

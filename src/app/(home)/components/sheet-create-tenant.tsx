@@ -50,7 +50,7 @@ export function SheetCreateTenant({ onTenantCreated }: SheetCreateTenantProps) {
     name: "users",
   });
 
-  const { execute, isExecuting, result } = useAction(createTenant, {
+  const { execute, isExecuting } = useAction(createTenant, {
     onSuccess: ({ data }) => {
       if (data?.success) {
         toast.success("Tenant criado com sucesso!");
