@@ -1,5 +1,6 @@
-"use client";
-
+import { SettingsIcon } from "lucide-react";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -18,17 +19,26 @@ export default function Home() {
   ];
 
   return (
-    <div className="container mx-auto p-6">
+    <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Gerenciamento de Tenants</h1>
-        <SheetCreateTenant />
+        <h1 className="text-3xl font-bold">Tenants Management</h1>
+        <div className="flex gap-2">
+          <SheetCreateTenant />
+          <Link
+            href="/settings"
+            className={buttonVariants({ variant: "outline" })}
+          >
+            <SettingsIcon />
+            Settings
+          </Link>
+        </div>
       </div>
       <div className="border rounded-md">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Tenant</TableHead>
-              <TableHead>Usuário</TableHead>
+              <TableHead>User</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

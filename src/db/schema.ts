@@ -6,7 +6,18 @@ export const tenants = sqliteTable("tenants", {
   name: text("name"),
 });
 
-export const users = sqliteTable("users", {
+export const settings = sqliteTable("settings", {
+  id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
+  ddl: text("ddl"),
+});
+
+export const adminUsers = sqliteTable("admin_users", {
+  id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
+  username: text("username"),
+  password: text("password"),
+});
+
+export const tenantUsers = sqliteTable("tenant_users", {
   id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
   username: text("username"),
   password: text("password"),
@@ -16,12 +27,12 @@ export const users = sqliteTable("users", {
 });
 
 export const tenantsRelations = relations(tenants, ({ many }) => ({
-  users: many(users),
+  users: many(tenantUsers),
 }));
 
-export const usersRelations = relations(users, ({ one }) => ({
+export const usersRelations = relations(tenantUsers, ({ one }) => ({
   tenant: one(tenants, {
-    fields: [users.tenantId],
+    fields: [tenantUsers.tenantId],
     references: [tenants.id],
   }),
 }));

@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "86c42d5d-f9cd-4e65-8b86-24f5ce2c8716",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "6ba881e7-ea40-4689-b0bc-5ee923bd945b",
+  "prevId": "86c42d5d-f9cd-4e65-8b86-24f5ce2c8716",
   "tables": {
     "admin_users": {
       "name": "admin_users",
@@ -23,6 +23,30 @@
         },
         "password": {
           "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "settings": {
+      "name": "settings",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "ddl": {
+          "name": "ddl",
           "type": "text",
           "primaryKey": false,
           "notNull": false,

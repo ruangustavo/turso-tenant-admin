@@ -1,3 +1,4 @@
+import "./src/envConfig";
 import { defineConfig } from "drizzle-kit";
 
 if (!process.env.TURSO_CONNECTION_URL || !process.env.TURSO_AUTH_TOKEN) {
