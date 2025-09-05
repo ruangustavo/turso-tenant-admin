@@ -129,55 +129,57 @@ export function SheetCreateTenant({ onTenantCreated }: SheetCreateTenantProps) {
                 </Button>
               </div>
 
-              {fields.map((field, index) => (
-                <div key={field.id} className="space-y-4 p-4 border rounded-lg">
-                  <div className="flex items-center justify-between h-8">
-                    <h4 className="font-medium">User {index + 1}</h4>
-                    {fields.length > 1 && (
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeUser(index)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    )}
+              <div className="divide-y divide-muted-foreground/20">
+                {fields.map((field, index) => (
+                  <div key={field.id} className="space-y-4 py-4">
+                    <div className="flex items-center justify-between h-8">
+                      <h4 className="font-medium">User {index + 1}</h4>
+                      {fields.length > 1 && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeUser(index)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+
+                    <FormField
+                      control={form.control}
+                      name={`users.${index}.username`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>User</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Enter the user" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name={`users.${index}.password`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Password</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="password"
+                              placeholder="Enter the password"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
-
-                  <FormField
-                    control={form.control}
-                    name={`users.${index}.username`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>User</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter the user" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name={`users.${index}.password`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Password</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="password"
-                            placeholder="Enter the password"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
 
             <SheetFooter className="p-0">
