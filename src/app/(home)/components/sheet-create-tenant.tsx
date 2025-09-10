@@ -29,6 +29,17 @@ import {
 import { SubmitButton } from "@/components/ui/submit-button";
 import { createTenantSchema } from "../utils/schema";
 
+const normalizeDisplayName = (displayName: string): string => {
+  return displayName
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+};
+
 type CreateTenantForm = z.infer<typeof createTenantSchema>;
 
 interface SheetCreateTenantProps {
@@ -96,7 +107,7 @@ export function SheetCreateTenant({ onTenantCreated }: SheetCreateTenantProps) {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button variant="outline">
-          <PlusIcon className="h-4 w-4 mr-2" />
+          <PlusIcon className="h-4 w-4" />
           New tenant
         </Button>
       </SheetTrigger>
@@ -108,12 +119,21 @@ export function SheetCreateTenant({ onTenantCreated }: SheetCreateTenantProps) {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
-              name="name"
+              name="displayName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Tenant Name</FormLabel>
+                  <FormLabel>Display Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter the tenant name" {...field} />
+                    <Input
+                      placeholder="Enter the display name"
+                      {...field}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        field.onChange(value);
+                        const normalizedName = normalizeDisplayName(value);
+                        form.setValue("name", normalizedName);
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -121,12 +141,12 @@ export function SheetCreateTenant({ onTenantCreated }: SheetCreateTenantProps) {
             />
             <FormField
               control={form.control}
-              name="displayName"
+              name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Display Name</FormLabel>
+                  <FormLabel>Tenant Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter the display name" {...field} />
+                    <Input placeholder="Enter the tenant name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

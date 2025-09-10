@@ -1,6 +1,5 @@
 "use server";
 
-import { hash } from "bcrypt";
 import { eq } from "drizzle-orm";
 import { revalidateTag } from "next/cache";
 import { z } from "zod/v4";
@@ -8,6 +7,7 @@ import { createTenantSchema } from "@/app/(home)/utils/schema";
 import { db } from "@/db";
 import { tenants, tenantUsers } from "@/db/schema";
 import { actionClient } from "@/lib/actions";
+import { hashPassword } from "@/lib/hash";
 import {
   checkDatabaseExists,
   createDatabase,
@@ -58,7 +58,7 @@ export const createTenant = actionClient
       const usersToCreate = [];
 
       for (const user of users) {
-        const hashedPassword = await hash(user.password, 10);
+        const hashedPassword = await hashPassword(user.password);
 
         usersToCreate.push({
           username: user.username,
@@ -72,7 +72,7 @@ export const createTenant = actionClient
         return { error: "Failed to create users" };
       }
 
-      revalidateTag("tenant");
+      revalidateTag("tenants");
       return { success: "Tenant created successfully" };
     },
   );
@@ -103,6 +103,6 @@ export const deleteTenant = actionClient
       return { error: "Failed to delete database" };
     }
 
-    revalidateTag("tenant");
+    revalidateTag("tenants");
     return { success: "Tenant and database deleted successfully" };
   });

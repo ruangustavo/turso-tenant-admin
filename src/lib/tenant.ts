@@ -1,11 +1,11 @@
 import { createClient as createLibsqlClient } from "@libsql/client";
 import { createClient as createTursoClient } from "@tursodatabase/api";
-import { hash } from "bcrypt";
 import { drizzle } from "drizzle-orm/libsql";
 import { migrate } from "drizzle-orm/libsql/migrator";
 import { db } from "@/db";
 import { settings } from "@/db/schema";
 import { env } from "../env";
+import { hashPassword } from "./hash";
 
 const turso = createTursoClient({
   token: env.TURSO_API_TOKEN,
@@ -16,8 +16,11 @@ export const checkDatabaseExists = async (tenant: string) => {
   try {
     await turso.databases.get(tenant);
     return true;
-  } catch (error) {
-    console.error(error);
+  } catch (error: unknown) {
+    if (error instanceof Error && "status" in error && error.status === 404) {
+      return false;
+    }
+    console.error("Error checking database existence:", error);
     return false;
   }
 };
@@ -120,7 +123,15 @@ export const runDDL = async (tenant: string) => {
     return false;
   }
 
-  await client.execute(data.ddl);
+  const statements = data.ddl
+    .split(";")
+    .map((stmt) => stmt.trim())
+    .filter((stmt) => stmt.length > 0);
+
+  for (const statement of statements) {
+    await client.execute(statement);
+  }
+
   return true;
 };
 
@@ -131,10 +142,10 @@ export const createUsers = async (tenant: string, users: User[]) => {
   }
 
   for (const user of users) {
-    const hashedPassword = await hash(user.password, 10);
+    const hashedPassword = await hashPassword(user.password);
 
     await client.execute({
-      sql: "INSERT INTO users (username, password) VALUES (?, ?)",
+      sql: "INSERT INTO usuarios (username, password) VALUES (?, ?)",
       args: [user.username, hashedPassword],
     });
   }
