@@ -1,0 +1,1 @@
+ALTER TABLE `tenants` ADD `primary_color` text;

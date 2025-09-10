@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, PlusIcon, Trash2 } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
@@ -42,6 +42,9 @@ export function SheetCreateTenant({ onTenantCreated }: SheetCreateTenantProps) {
     resolver: zodResolver(createTenantSchema),
     defaultValues: {
       name: "",
+      displayName: "",
+      logoUrl: "",
+      primaryColor: "#3b82f6",
       users: [{ username: "", password: "" }],
     },
   });
@@ -87,11 +90,13 @@ export function SheetCreateTenant({ onTenantCreated }: SheetCreateTenantProps) {
     }
   };
 
+  const primaryColorId = useId();
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button variant="outline">
-          <PlusIcon />
+          <PlusIcon className="h-4 w-4 mr-2" />
           New tenant
         </Button>
       </SheetTrigger>
@@ -99,7 +104,6 @@ export function SheetCreateTenant({ onTenantCreated }: SheetCreateTenantProps) {
         <SheetHeader className="p-0">
           <SheetTitle className="sr-only">Create New Tenant</SheetTitle>
         </SheetHeader>
-
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
@@ -110,6 +114,62 @@ export function SheetCreateTenant({ onTenantCreated }: SheetCreateTenantProps) {
                   <FormLabel>Tenant Name</FormLabel>
                   <FormControl>
                     <Input placeholder="Enter the tenant name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="displayName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Display Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter the display name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="logoUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Logo URL</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter the logo URL" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="primaryColor"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Primary Color</FormLabel>
+                  <FormControl>
+                    <div className="relative dark:bg-input/30">
+                      <input
+                        type="color"
+                        id={primaryColorId}
+                        value={field.value}
+                        onChange={(e) => field.onChange(e.target.value)}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                      />
+                      <div className="flex items-center gap-3 h-9 px-3 py-1 border border-input rounded-md bg-transparent shadow-xs transition-[color,box-shadow] cursor-pointer focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]">
+                        <div
+                          className="size-5 rounded-sm border-2 border-border shadow-sm"
+                          style={{ backgroundColor: field.value }}
+                        />
+                        <span className="text-sm font-mono text-foreground">
+                          {field.value?.toUpperCase()}
+                        </span>
+                      </div>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

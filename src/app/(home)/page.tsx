@@ -1,5 +1,6 @@
 import { Building2, SettingsIcon } from "lucide-react";
 import { unstable_cache as cache } from "next/cache";
+import Image from "next/image";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -17,6 +18,13 @@ import { SheetCreateTenant } from "./components/sheet-create-tenant";
 const getTenants = cache(
   async () => {
     return await db.query.tenants.findMany({
+      columns: {
+        id: true,
+        name: true,
+        displayName: true,
+        logoUrl: true,
+        primaryColor: true,
+      },
       with: {
         users: {
           columns: {
@@ -54,8 +62,11 @@ export default async function Home() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>Logo</TableHead>
               <TableHead>Tenant</TableHead>
-              <TableHead>User</TableHead>
+              <TableHead>Display Name</TableHead>
+              <TableHead>Primary Color</TableHead>
+              <TableHead>Users</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -63,7 +74,7 @@ export default async function Home() {
             {tenants.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={3}
+                  colSpan={6}
                   className="text-center py-8 text-muted-foreground"
                 >
                   <div className="flex flex-col items-center gap-4">
@@ -80,7 +91,41 @@ export default async function Home() {
             ) : (
               tenants.map((tenant) => (
                 <TableRow key={tenant.id}>
+                  <TableCell>
+                    {tenant.logoUrl ? (
+                      <Image
+                        src={tenant.logoUrl}
+                        alt={`${tenant.displayName || tenant.name} logo`}
+                        className="rounded object-cover"
+                        width={32}
+                        height={32}
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
+                    ) : (
+                      <div className="w-8 h-8 rounded bg-muted flex items-center justify-center">
+                        <Building2 className="w-4 h-4 text-muted-foreground" />
+                      </div>
+                    )}
+                  </TableCell>
                   <TableCell className="font-medium">{tenant.name}</TableCell>
+                  <TableCell>{tenant.displayName || "N/A"}</TableCell>
+                  <TableCell>
+                    {tenant.primaryColor ? (
+                      <div className="flex items-center gap-2">
+                        <div
+                          className="w-4 h-4 rounded border"
+                          style={{ backgroundColor: tenant.primaryColor }}
+                        />
+                        <span className="text-sm font-mono">
+                          {tenant.primaryColor}
+                        </span>
+                      </div>
+                    ) : (
+                      "N/A"
+                    )}
+                  </TableCell>
                   <TableCell>
                     {tenant.users.map((user) => user.username).join(", ")}
                   </TableCell>

@@ -3,6 +3,9 @@ import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 export const tenants = sqliteTable("tenants", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   name: text("name").notNull(),
+  displayName: text("display_name"),
+  logoUrl: text("logo_url"),
+  primaryColor: text("primary_color"),
 });
 
 export const settings = sqliteTable("settings", {

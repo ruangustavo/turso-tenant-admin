@@ -7,5 +7,8 @@ export const userSchema = z.object({
 
 export const createTenantSchema = z.object({
   name: z.string().min(1, "Tenant name is required"),
+  displayName: z.string().optional(),
+  logoUrl: z.url("Invalid URL format").optional(),
+  primaryColor: z.string().optional(),
   users: z.array(userSchema).min(1, "At least one user is required"),
 });
